@@ -1,0 +1,181 @@
+﻿@model Booking.Site.Models.Shared.ReportData
+
+<table class="h28_maxwidth">
+    <tr>
+        <td>
+            @(await this.Html.PartialAsync("_RunPreRenderedData.cshtml", new Booking.Site.Models.Shared.ReportData()
+            {
+                _sReport = this.Model._sReport,
+                _sBranding = this.Model._sBranding,
+                _gId = this.Model._gId,
+                _nReport = this.Model._nReport,
+                _bPosted = this.Model._bPosted,
+                _sHeading = this.Model._sHeading,
+                _bAll = this.Model._bAll,
+                _bContras = this.Model._bContras,
+                _dEnd = this.Model._dEnd,
+                _dStart = this.Model._dStart,
+                _dAt = this.Model._dAt,
+                _dTo = this.Model._dTo
+            }))
+        </td>
+        <td>
+        </td>
+    </tr>
+    <tr class="trparameters@(this.Model._nReport.ToString())">
+        <td>
+            @(await this.Html.PartialAsync("_All.cshtml", new Booking.Site.Models.Shared.ReportData()
+        {
+            _sReport = this.Model._sReport,
+            _sBranding = this.Model._sBranding,
+            _gId = this.Model._gId,
+            _nReport = this.Model._nReport,
+            _bPosted = this.Model._bPosted,
+            _sHeading = this.Model._sHeading,
+            _bAll = this.Model._bAll,
+            _bContras = this.Model._bContras,
+            _dEnd = this.Model._dEnd,
+            _dStart = this.Model._dStart,
+            _dAt = this.Model._dAt,
+            _dTo = this.Model._dTo
+        }))
+        </td>
+        <td>
+        </td>
+    </tr>
+    <tr class="trparameters@(this.Model._nReport.ToString())">
+        <td>
+            @(await this.Html.PartialAsync("_Contra.cshtml", new Booking.Site.Models.Shared.ReportData()
+        {
+            _sReport = this.Model._sReport,
+            _sBranding = this.Model._sBranding,
+            _gId = this.Model._gId,
+            _nReport = this.Model._nReport,
+            _bPosted = this.Model._bPosted,
+            _sHeading = this.Model._sHeading,
+            _bAll = this.Model._bAll,
+            _bContras = this.Model._bContras,
+            _dEnd = this.Model._dEnd,
+            _dStart = this.Model._dStart,
+            _dAt = this.Model._dAt,
+            _dTo = this.Model._dTo
+        }))
+        </td>
+        <td>
+        </td>
+    </tr>
+    <tr class="trTR@(this.Model._nReport.ToString()) trparameters@(this.Model._nReport.ToString())">
+        <td>
+            @(await this.Html.PartialAsync("_GLAccounts.cshtml", new Booking.Site.Models.Shared.ReportData()
+        {
+            _sReport = this.Model._sReport,
+            _sBranding = this.Model._sBranding,
+            _gId = this.Model._gId,
+            _nReport = this.Model._nReport,
+            _bPosted = this.Model._bPosted,
+            _sHeading = this.Model._sHeading,
+            _bAll = this.Model._bAll,
+            _bContras = this.Model._bContras,
+            _dEnd = this.Model._dEnd,
+            _dStart = this.Model._dStart,
+            _dAt = this.Model._dAt,
+            _dTo = this.Model._dTo
+        }))
+        </td>
+        <td>
+        </td>
+    </tr>
+    <tr class="trparameters@(this.Model._nReport.ToString())">
+        <td>
+            @(await this.Html.PartialAsync("_Batches.cshtml", new Booking.Site.Models.Shared.ReportData()
+        {
+            _sReport = this.Model._sReport,
+            _sBranding = this.Model._sBranding,
+            _gId = this.Model._gId,
+            _nReport = this.Model._nReport,
+            _bPosted = this.Model._bPosted,
+            _sHeading = this.Model._sHeading,
+            _bAll = this.Model._bAll,
+            _bContras = this.Model._bContras,
+            _dEnd = this.Model._dEnd,
+            _dStart = this.Model._dStart,
+            _dAt = this.Model._dAt,
+            _dTo = this.Model._dTo
+        }))
+        </td>
+        <td>
+        </td>
+    </tr>
+    <tr class="trparameters@(this.Model._nReport.ToString())">
+        <td>
+            @(await this.Html.PartialAsync("_DateRange.cshtml", new Booking.Site.Models.Shared.ReportData()
+        {
+            _sReport = this.Model._sReport,
+            _sBranding = this.Model._sBranding,
+            _gId = this.Model._gId,
+            _nReport = this.Model._nReport,
+            _bPosted = this.Model._bPosted,
+            _sHeading = this.Model._sHeading,
+            _bAll = this.Model._bAll,
+            _bContras = this.Model._bContras,
+            _dEnd = this.Model._dEnd,
+            _dStart = this.Model._dStart,
+            _dAt = this.Model._dAt,
+            _dTo = this.Model._dTo
+        }))
+        </td>
+        <td>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: right;">
+            <span class="trqueuebuttons@(this.Model._nReport.ToString())">
+                @(await this.Html.PartialAsync("_ScheduleAndQueue.cshtml", new Booking.Site.Models.Shared.ReportData()
+                {
+                    _sReport = this.Model._sReport,
+                    _sBranding = this.Model._sBranding,
+                    _gId = this.Model._gId,
+                    _nReport = this.Model._nReport,
+                    _bPosted = this.Model._bPosted,
+                    _sHeading = this.Model._sHeading,
+                    _bAll = this.Model._bAll,
+                    _bContras = this.Model._bContras,
+                    _dEnd = this.Model._dEnd,
+                    _dStart = this.Model._dStart,
+                    _dAt = this.Model._dAt,
+                    _dTo = this.Model._dTo
+                }))
+                @(await this.Html.PartialAsync("_Queue.cshtml", new Booking.Site.Models.Shared.ReportData()
+                {
+                    _sReport = this.Model._sReport,
+                    _sBranding = this.Model._sBranding,
+                    _gId = this.Model._gId,
+                    _nReport = this.Model._nReport,
+                    _bPosted = this.Model._bPosted,
+                    _sHeading = this.Model._sHeading,
+                    _bAll = this.Model._bAll,
+                    _bContras = this.Model._bContras,
+                    _dEnd = this.Model._dEnd,
+                    _dStart = this.Model._dStart,
+                    _dAt = this.Model._dAt,
+                    _dTo = this.Model._dTo
+                }))
+            </span>
+            @(await this.Html.PartialAsync("_Run.cshtml", new Booking.Site.Models.Shared.ReportData()
+            {
+                _sReport = this.Model._sReport,
+                _sBranding = this.Model._sBranding,
+                _gId = this.Model._gId,
+                _nReport = this.Model._nReport,
+                _bPosted = this.Model._bPosted,
+                _sHeading = this.Model._sHeading,
+                _bAll = this.Model._bAll,
+                _bContras = this.Model._bContras,
+                _dEnd = this.Model._dEnd,
+                _dStart = this.Model._dStart,
+                _dAt = this.Model._dAt,
+                _dTo = this.Model._dTo
+            }))
+        </td>
+    </tr>
+</table>

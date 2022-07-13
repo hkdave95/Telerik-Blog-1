@@ -1,0 +1,338 @@
+﻿@model Booking.Site.Models.Shared.ReportData
+
+@using Booking.Library.Classes
+
+@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.Extensions.Caching.Memory
+
+@inject Booking.Data.DB.Heron28.Heron28Context _oHeron28Context
+@inject IMemoryCache _oIMemoryCache
+
+@switch ((Booking.Library.Classes.Enums.Reports)this.Model._nReport)
+{
+    case Booking.Library.Classes.Enums.Reports.TimeBatches:
+        {
+            <text>
+                @Html.Kendo().Button().Name("RunB1" + this.Model._nReport.ToString()).Content("Run Time Batches").Icon("subreport").HtmlAttributes(new { onclick = "RunB1(" + this.Model._nReport + ")" })
+            </text>
+        }
+        break;
+    case Booking.Library.Classes.Enums.Reports.DisbursementBatch:
+        {
+            <text>
+                @Html.Kendo().Button().Name("RunB2" + this.Model._nReport.ToString()).Content("Run Disbursement Batches").Icon("subreport").HtmlAttributes(new { onclick = "RunB2(" + this.Model._nReport + ")" })
+            </text>
+        }
+        break;
+    case Booking.Library.Classes.Enums.Reports.JournalBatch:
+        {
+            <text>
+                @Html.Kendo().Button().Name("RunB3" + this.Model._nReport.ToString()).Content("Run Journal Batches").Icon("subreport").HtmlAttributes(new { onclick = "RunB3(" + this.Model._nReport + ")" })
+            </text>
+        }
+        break;
+    case Booking.Library.Classes.Enums.Reports.TrialBalance1:
+        {
+            <text>
+                @Html.Kendo().Button().Name("RunTB1" + this.Model._nReport.ToString()).Content("Run Trial Balance 1").Icon("subreport").HtmlAttributes(new { onclick = "RunTB1(" + this.Model._nReport + ")" })
+            </text>
+        }
+        break;
+    case Booking.Library.Classes.Enums.Reports.TrialBalance2:
+        {
+            <text>
+                @Html.Kendo().Button().Name("RunTB2" + this.Model._nReport.ToString()).Content("Run Trial Balance 2").Icon("subreport").HtmlAttributes(new { onclick = "RunTB2(" + this.Model._nReport + ")" })
+            </text>
+        }
+        break;
+    case Booking.Library.Classes.Enums.Reports.TransactionReport1:
+        {
+            <text>
+                @Html.Kendo().Button().Name("RunTR1" + this.Model._nReport.ToString()).Content("Run Transaction Report 1").Icon("subreport").HtmlAttributes(new { onclick = "RunTR1(" + this.Model._nReport + ")" })
+            </text>
+        }
+        break;
+    case Booking.Library.Classes.Enums.Reports.AgedDebtorsReport1:
+        {
+            <text>
+                @Html.Kendo().Button().Name("RunAD1" + this.Model._nReport.ToString()).Content("Run Aged Debtors Report").Icon("subreport").HtmlAttributes(new { onclick = "RunAD1(" + this.Model._nReport + ")" })
+            </text>
+        }
+        break;
+    case Booking.Library.Classes.Enums.Reports.AgedDebtorsReport2:
+        {
+            <text>
+                @Html.Kendo().Button().Name("RunAD2" + this.Model._nReport.ToString()).Content("Run Aged Debtors Report").Icon("subreport").HtmlAttributes(new { onclick = "RunAD2(" + this.Model._nReport + ")" })
+            </text>
+        }
+        break;
+    case Booking.Library.Classes.Enums.Reports.VATReturn:
+        {
+            <text>
+                @Html.Kendo().Button().Name("RunVATReturn" + this.Model._nReport.ToString()).Content("Run VAT Return Report").Icon("subreport").HtmlAttributes(new { onclick = "RunVATReturn(" + this.Model._nReport + ")" })
+            </text>
+        }
+        break;
+}
+<script>
+
+    function SelectPreRenderedCheckBoxClose(e) {
+        if (h28_WindowClose(e)) {
+            oFunctionToRunOnResize = null;
+            h28_PopWindow();
+        }
+    }
+
+    if (typeof(RunVATReturn) == 'undefined') {
+        function RunVATReturn(nReport) {
+            RunReport(nReport, null);
+        }
+
+        function RunB1(nReport) {
+            RunReport(nReport, null);
+        }
+
+        function RunB2(nReport) {
+            RunReport(nReport, null);
+        }
+
+        function RunB3(nReport) {
+            RunReport(nReport, null);
+        }
+
+        function RunTB1(nReport) {
+            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked")) {
+                h28_CreateWindow(true, "SelectPreRenderedWindow", "Select Pre Rendered Data - @(Booking.Library.Classes.Utility.StringValueOf((Booking.Library.Classes.Enums.Reports)this.Model._nReport))", function () {
+                    $("#SelectPreRenderedWindow").data("kendoWindow").refresh({
+                        url: '@Url.Content("~/Shared/_SelectPreRenderedData")',
+                        data: { lnReport: nReport }
+                    }).center().open();
+                }, SelectPreRenderedCheckBoxClose);
+            }
+            else {
+                RunReport(nReport, null);
+            }
+        }
+
+        function RunTB2(nReport) {
+            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked")) {
+                h28_CreateWindow(true, "SelectPreRenderedWindow", "Select Pre Rendered Data - @(Booking.Library.Classes.Utility.StringValueOf((Booking.Library.Classes.Enums.Reports)this.Model._nReport))", function () {
+                    $("#SelectPreRenderedWindow").data("kendoWindow").refresh({
+                        url: '@Url.Content("~/Shared/_SelectPreRenderedData")',
+                        data: { lnReport: nReport }
+                    }).center().open();
+                }, SelectPreRenderedCheckBoxClose);
+            }
+            else {
+                RunReport(nReport, null);
+            }
+        }
+
+        function RunTR1(nReport) {
+            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked")) {
+                h28_CreateWindow(true, "SelectPreRenderedWindow", "Select Pre Rendered Data - @(Booking.Library.Classes.Utility.StringValueOf((Booking.Library.Classes.Enums.Reports)this.Model._nReport))", function () {
+                    $("#SelectPreRenderedWindow").data("kendoWindow").refresh({
+                        url: '@Url.Content("~/Shared/_SelectPreRenderedData")',
+                        data: { lnReport: nReport }
+                    }).center().open();
+                }, SelectPreRenderedCheckBoxClose);
+            }
+            else {
+                RunReport(nReport, null);
+            }
+        }
+
+        function RunAD1(nReport) {
+            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked")) {
+                h28_CreateWindow(true, "SelectPreRenderedWindow", "Select Pre Rendered Data - @(Booking.Library.Classes.Utility.StringValueOf((Booking.Library.Classes.Enums.Reports)this.Model._nReport))", function () {
+                    $("#SelectPreRenderedWindow").data("kendoWindow").refresh({
+                        url: '@Url.Content("~/Shared/_SelectPreRenderedData")',
+                        data: { lnReport: nReport }
+                    }).center().open();
+                }, SelectPreRenderedCheckBoxClose);
+            }
+            else {
+                RunReport(nReport, null);
+            }
+        }
+
+        function RunAD2(nReport) {
+            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked")) {
+                h28_CreateWindow(true, "SelectPreRenderedWindow", "Select Pre Rendered Data - @(Booking.Library.Classes.Utility.StringValueOf((Booking.Library.Classes.Enums.Reports)this.Model._nReport))", function () {
+                    $("#SelectPreRenderedWindow").data("kendoWindow").refresh({
+                        url: '@Url.Content("~/Shared/_SelectPreRenderedData")',
+                        data: { lnReport: nReport }
+                    }).center().open();
+                }, SelectPreRenderedCheckBoxClose);
+            }
+            else {
+                RunReport(nReport, null);
+            }
+        }
+
+        function RunReport(nReport, sId) {
+            h28_confirm("@Booking.Site.Classes.Helper.Text(this.Context, this._oIMemoryCache, this._oHeron28Context, this.User.Identity.Name, "Are you sure you want to run this report?", "Are you sure you want to run this report?", false)", function() {
+                if (sId == null) {
+                    sId = sGuidEmpty;
+                }
+                else {
+                    $("#SelectPreRenderedWindow").data("kendoWindow").close();
+                }
+                switch (nReport) {
+                    case @((int)Booking.Library.Classes.Enums.Reports.TimeBatches):
+                        {
+                            if ($("#AllCheckBox" + nReport.toString()).is(":checked") || ($("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null && $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null)) {
+                                var dStart = $("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                var dEnd = $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                var bAll = $("#AllCheckBox" + nReport.toString()).is(":checked");
+                                h28_CreateWindow(true, "ReportWindow", "Batch Report", function() {
+                                    $("#ReportWindow").data("kendoWindow").refresh({
+                                        url: '@Url.Content("~/Shared/_ReportViewer")',
+                                        data: { lnReport: nReport, lsData: "[sReport]=[Time/Time Batches 1][sJob]=[Job][dStart]=[" + kendo.format("{0:dd-MMM-yyyy}", dStart) + "][dEnd]=[" + kendo.format("{0:dd-MMM-yyyy}", dEnd) + "][bPosted]=[false][bAll]=[" + ((bAll) ? "true" : "false") + "][gInstanceId]=[" + sId + "][sCulture]=[" + sCompanyCulture + "]*" }
+                                    }).center().open();
+                                }, null);
+                            } else {
+                                h28_ShowMessage("Please enter a date range or select all data...", sMessageWindow, nShowMessageLevel > 0, function() { }, null);
+                            }
+                        }
+                        break;
+                    case @((int)Booking.Library.Classes.Enums.Reports.DisbursementBatch):
+                        {
+                            if ($("#AllCheckBox" + nReport.toString()).is(":checked") || ($("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null && $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null)) {
+                                var dStart = $("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                var dEnd = $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                var bAll = $("#AllCheckBox" + nReport.toString()).is(":checked");
+                                h28_CreateWindow(true, "ReportWindow", "Batch Report", function() {
+                                    $("#ReportWindow").data("kendoWindow").refresh({
+                                        url: '@Url.Content("~/Shared/_ReportViewer")',
+                                        data: { lnReport: nReport, lsData: "[sReport]=[Disbursemenmt/Disbursement Batch][dStart]=[" + kendo.format("{0:dd-MMM-yyyy}", dStart) + "][dEnd]=[" + kendo.format("{0:dd-MMM-yyyy}", dEnd) + "][bPosted]=[false][bAll]=[" + ((bAll) ? "true" : "false") + "][gInstanceId]=[" + sId + "][sCulture]=[" + sCompanyCulture + "]*" }
+                                    }).center().open();
+                                }, null);
+                            } else {
+                                h28_ShowMessage("Please enter a date range or select all data...", sMessageWindow, nShowMessageLevel > 0, function() { }, null);
+                            }
+                        }
+                        break;
+                    case @((int)Booking.Library.Classes.Enums.Reports.JournalBatch):
+                        {
+                            if ($("#AllCheckBox" + nReport.toString()).is(":checked") || ($("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null && $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null)) {
+                                var dStart = $("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                var dEnd = $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                var bAll = $("#AllCheckBox" + nReport.toString()).is(":checked");
+                                h28_CreateWindow(true, "ReportWindow", "Batch Report", function() {
+                                    $("#ReportWindow").data("kendoWindow").refresh({
+                                        url: '@Url.Content("~/Shared/_ReportViewer")',
+                                        data: { lnReport: nReport, lsData: "[sReport]=[GL/Journal Batch][dStart]=[" + kendo.format("{0:dd-MMM-yyyy}", dStart) + "][dEnd]=[" + kendo.format("{0:dd-MMM-yyyy}", dEnd) + "][bPosted]=[false][bAll]=[" + ((bAll) ? "true" : "false") + "][gInstanceId]=[" + sId + "][sCulture]=[" + sCompanyCulture + "]*" }
+                                    }).center().open();
+                                }, null);
+                            } else {
+                                h28_ShowMessage("Please enter a date range or select all data...", sMessageWindow, nShowMessageLevel > 0, function() { }, null);
+                            }
+                        }
+                        break;
+                    case @((int)Booking.Library.Classes.Enums.Reports.TrialBalance1):
+                        {
+                            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked") || $("#AtDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null) {
+                                var dAt = $("#AtDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                h28_CreateWindow(true, "ReportWindow", "Trial Balance 1", function() {
+                                    $("#ReportWindow").data("kendoWindow").refresh({
+                                        url: '@Url.Content("~/Shared/_ReportViewer")',
+                                        data: { lnReport: nReport, lsData: "[sReport]=[GL/Trial Balance 1@((Booking.Data.Classes.Configuration._bStaging) ? "s" : string.Empty)][sExcludeBatches]=[" + h28_GetMultiSelectAsPipedList("BatchesMultiSelect" + nReport) + "][dAt]=[" + kendo.format("{0:dd-MMM-yyyy}", dAt) + "][gInstanceId]=[" + sId + "][sCulture]=[" + sCompanyCulture + "]*" }
+                                    }).center().open();
+                                }, null);
+                            } else {
+                                h28_ShowMessage("Please enter a date to which the Trial Balance should be generated...", sMessageWindow, nShowMessageLevel > 0, function() { }, null);
+                            }
+                        }
+                        break;
+                    case @((int)Booking.Library.Classes.Enums.Reports.TrialBalance2):
+                        {
+                            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked") || $("#AtDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null) {
+                                var dAt = $("#AtDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                h28_CreateWindow(true, "ReportWindow", "Trial Balance 2", function() {
+                                    $("#ReportWindow").data("kendoWindow").refresh({
+                                        url: '@Url.Content("~/Shared/_ReportViewer")',
+                                        data: { lnReport: nReport, lsData: "[sReport]=[GL/Trial Balance 2@((Booking.Data.Classes.Configuration._bStaging) ? "s" : string.Empty)][sExcludeBatches]=[" + h28_GetMultiSelectAsPipedList("BatchesMultiSelect" + nReport) + "][dAt]=[" + kendo.format("{0:dd-MMM-yyyy}", dAt) + "][gInstanceId]=[" + sId + "][sCulture]=[" + sCompanyCulture + "]*" }
+                                    }).center().open();
+                                }, null);
+                            } else {
+                                h28_ShowMessage("Please enter a date to which the Trial Balance should be generated...", sMessageWindow, nShowMessageLevel > 0, function() { }, null);
+                            }
+                        }
+                        break;
+                    case @((int)Booking.Library.Classes.Enums.Reports.TransactionReport1):
+                        {
+                            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked") || ($("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null && $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null && ($("#AllCheckBox" + nReport.toString()).is(":checked") || h28_GetMultiSelectAsPipedList("GLAccountsMultiSelect" + nReport).length > 0))) {
+                                var dFrom = $("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                var dTo = $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                var bAll = $("#AllCheckBox" + nReport.toString()).is(":checked");
+                                var bContras = $("#ContrasCheckBox" + nReport.toString()).is(":checked");
+                                h28_CreateWindow(true, "ReportWindow", "Transaction Report", function() {
+                                    $("#ReportWindow").data("kendoWindow").refresh({
+                                        url: '@Url.Content("~/Shared/_ReportViewer")',
+                                        data: { lnReport: nReport, lsData: "[sReport]=[GL/Transaction Report 1@((Booking.Data.Classes.Configuration._bStaging) ? "s" : string.Empty)][dFrom]=[" + kendo.format("{0:dd-MMM-yyyy}", dFrom) + "][dTo]=[" + kendo.format("{0:dd-MMM-yyyy}", dTo) + "][sExcludeBatches]=[" + h28_GetMultiSelectAsPipedList("BatchesMultiSelect" + nReport) + "][sAccounts]=[" + h28_GetMultiSelectAsPipedList("GLAccountsMultiSelect" + nReport) + "][bAll]=[" + ((bAll) ? "true" : "false") + "][bContras]=[" + ((bContras) ? "true" : "false") + "][gInstanceId]=[" + sId + "][sCulture]=[" + sCompanyCulture + "]*" }
+                                    }).center().open();
+                                }, null);
+                            } else {
+                                h28_ShowMessage("Please enter a date from / to which transactions need to be displayed...Please also make sure you have selected some Accounts if you have not selected All Accounts...", sMessageWindow, nShowMessageLevel > 0, function() { }, null);
+                            }
+                        }
+                        break;
+                    case @((int)Booking.Library.Classes.Enums.Reports.VATReturn):
+                        {
+                            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked") || ($("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null && $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null)) {
+                                var dFrom = $("#StartDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                var dTo = $("#EndDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                h28_CreateWindow(true, "ReportWindow", "Transaction Report", function() {
+                                    $("#ReportWindow").data("kendoWindow").refresh({
+                                        url: '@Url.Content("~/Shared/_ReportViewer")',
+                                        data: { lnReport: nReport, lsData: "[sReport]=[SLPL/VAT Return@((Booking.Data.Classes.Configuration._bStaging) ? "s" : string.Empty)][dFrom]=[" + kendo.format("{0:dd-MMM-yyyy}", dFrom) + "][dTo]=[" + kendo.format("{0:dd-MMM-yyyy}", dTo) + "][sExcludeBatches]=[" + h28_GetMultiSelectAsPipedList("BatchesMultiSelect" + nReport) + "][gInstanceId]=[" + sId + "][sCulture]=[" + sCompanyCulture + "]*" }
+                                    }).center().open();
+                                }, null);
+                            } else {
+                                h28_ShowMessage("Please enter a date from / to which transactions need to be displayed...", sMessageWindow, nShowMessageLevel > 0, function() { }, null);
+                            }
+                        }
+                        break;
+                    case @((int)Booking.Library.Classes.Enums.Reports.AgedDebtorsReport1):
+                        {
+                            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked") || ($("#AtDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null && ($("#AllCheckBox" + nReport.toString()).is(":checked") || h28_GetMultiSelectAsPipedList("CustomersMultiSelect" + nReport).length > 0))) {
+                                var bAll = $("#AllCheckBox" + nReport.toString()).is(":checked");
+                                var bShowZeoBalances = $("#ShowZeroBalancesCheckBox" + nReport.toString()).is(":checked");
+                                var bShowAllocated = $("#ShowAllocatedCheckBox" + nReport.toString()).is(":checked");
+                                var dAt = $("#AtDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                h28_CreateWindow(true, "ReportWindow", "Aged Debtors Report", function() {
+                                    $("#ReportWindow").data("kendoWindow").refresh({
+                                        url: '@Url.Content("~/Shared/_ReportViewer")',
+                                        data: { lnReport: nReport, lsData: "[sReport]=[SLPL/Aged Debtors Report 1@((Booking.Data.Classes.Configuration._bStaging) ? "s" : string.Empty)][dAt]=[" + kendo.format("{0:dd-MMM-yyyy}", dAt) + "][sExcludeBatches]=[" + h28_GetMultiSelectAsPipedList("BatchesMultiSelect" + nReport) + "][sCustomers]=[" + h28_GetMultiSelectAsPipedList("CustomersMultiSelect" + nReport) + "][bAll]=[" + ((bAll) ? "true" : "false") + "][bShowZeroBalances]=[" + ((bShowZeoBalances) ? "true" : "false") + "][gInstanceId]=[" + sId + "][sCulture]=[" + sCompanyCulture + "][bShowAllocated]=[" + ((bShowAllocated) ? "true" : "false") + "]*" }
+                                    }).center().open();
+                                }, null);
+                            } else {
+                                h28_ShowMessage("Please enter a date from / to which transactions need to be displayed...Please also make sure you have selected some Customers...", sMessageWindow, nShowMessageLevel > 0, function() { }, null);
+                            }
+                        }
+                        break;
+                    case @((int)Booking.Library.Classes.Enums.Reports.AgedDebtorsReport2):
+                        {
+                            if ($("#SelectPreRenderedCheckBox" + nReport.toString()).is(":checked") || ($("#AtDatePicker" + nReport.toString()).data("kendoDatePicker").value() != null && ($("#AllCheckBox" + nReport.toString()).is(":checked") || h28_GetMultiSelectAsPipedList("CustomersMultiSelect" + nReport).length > 0))) {
+                                var bAll = $("#AllCheckBox" + nReport.toString()).is(":checked");
+                                var bShowZeoBalances = $("#ShowZeroBalancesCheckBox" + nReport.toString()).is(":checked");
+                                var bShowAllocated = $("#ShowAllocatedCheckBox" + nReport.toString()).is(":checked");
+                                var dAt = $("#AtDatePicker" + nReport.toString()).data("kendoDatePicker").value();
+                                h28_CreateWindow(true, "ReportWindow", "Aged Debtors Report", function() {
+                                    $("#ReportWindow").data("kendoWindow").refresh({
+                                        url: '@Url.Content("~/Shared/_ReportViewer")',
+                                        data: { lnReport: nReport, lsData: "[sReport]=[SLPL/Aged Debtors Report 2@((Booking.Data.Classes.Configuration._bStaging) ? "s" : string.Empty)][dAt]=[" + kendo.format("{0:dd-MMM-yyyy}", dAt) + "][sExcludeBatches]=[" + h28_GetMultiSelectAsPipedList("BatchesMultiSelect" + nReport) + "][sCustomers]=[" + h28_GetMultiSelectAsPipedList("CustomersMultiSelect" + nReport) + "][bAll]=[" + ((bAll) ? "true" : "false") + "][bShowZeroBalances]=[" + ((bShowZeoBalances) ? "true" : "false") + "][gInstanceId]=[" + sId + "][sCulture]=[" + sCompanyCulture + "][bShowAllocated]=[" + ((bShowAllocated) ? "true" : "false") + "]*" }
+                                    }).center().open();
+                                }, null);
+                            } else {
+                                h28_ShowMessage("Please enter a date from / to which transactions need to be displayed...Please also make sure you have selected some Customers...", sMessageWindow, nShowMessageLevel > 0, function() { }, null);
+                            }
+                        }
+                        break;
+                }
+            });
+        }
+    }
+
+</script>

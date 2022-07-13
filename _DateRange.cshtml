@@ -1,0 +1,53 @@
+﻿@model Booking.Site.Models.Shared.ReportData
+
+@using Microsoft.Extensions.Caching.Memory
+
+@inject Booking.Data.DB.Heron28.Heron28Context _oHeron28Context
+@inject IMemoryCache _oIMemoryCache
+
+<script>
+
+    if (typeof (AllDatesCheckBox) == 'undefined') {
+        function AllDatesCheckBox(e) {
+            if (e.checked) {
+                $("#StartDatePicker" + e.sender.element.attr("data-report")).data("kendoDatePicker").value('01/01/2000');
+                $("#EndDatePicker" + e.sender.element.attr("data-report")).data("kendoDatePicker").value('31/12/2099');
+                $("#StartDatePicker" + e.sender.element.attr("data-report")).data("kendoDatePicker").enable(false);
+                $("#EndDatePicker" + e.sender.element.attr("data-report")).data("kendoDatePicker").enable(false);
+            }
+            else {
+                $("#StartDatePicker" + e.sender.element.attr("data-report")).data("kendoDatePicker").enable(true);
+                $("#EndDatePicker" + e.sender.element.attr("data-report")).data("kendoDatePicker").enable(true);
+            }
+        }
+    }
+
+</script>
+<label class="k-label h28_prompt">
+    @Booking.Site.Classes.Helper.Text(this.Context, this._oIMemoryCache, this._oHeron28Context, this.User.Identity.Name, "Click to choose all date data?", "Click to choose all date data?", false)
+</label>
+&nbsp;
+<input id="AllDatesCheckBox@(this.Model._nReport.ToString())" data-report="@(this.Model._nReport.ToString())" />
+<span class="daterange@(this.Model._nReport.ToString())">
+    <br />
+    <label class="k-label h28_prompt">
+        Start
+    </label>
+    &nbsp;
+    @Html.Kendo().DatePicker().Name("StartDatePicker" + this.Model._nReport.ToString()).HtmlAttributes(new { style = "width: 200px;" })
+    <br/>
+    <label class="k-label h28_prompt">
+        End
+    </label>
+    &nbsp;
+    @Html.Kendo().DatePicker().Name("EndDatePicker" + this.Model._nReport.ToString()).HtmlAttributes(new { style = "width: 200px;" })
+</span>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AllDatesCheckBox@(this.Model._nReport.ToString())").kendoSwitch({
+            change: AllDatesCheckBox
+        });
+    });
+</script>
+<style>
+</style>

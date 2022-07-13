@@ -1,0 +1,248 @@
+﻿@model Booking.Site.Models.Shared.ReportData
+
+@using Microsoft.AspNetCore.Identity;
+@using Microsoft.Extensions.Caching.Memory
+
+@inject Booking.Data.DB.Heron28.Heron28Context _oHeron28Context
+@inject IMemoryCache _oIMemoryCache
+
+@{
+}
+
+<script>
+
+    function StoreReport(e)
+    {
+        h28_confirm("@Booking.Site.Classes.Helper.Text(this.Context, this._oIMemoryCache, this._oHeron28Context, this.User.Identity.Name, "Store Report for User?", "Store Report for User?", false)", function () {
+            var oModel =
+            {
+                _gId: '@this.Model._gInstanceId.ToString()',
+                _nReport: @this.Model._nReport.ToString(),
+                _sData: '@this.Model._sData'
+            };
+            $.ajax({
+                url: '@Url.Content("~/Shared/_StoreReport")',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8;',
+                data: kendo.stringify(oModel),
+                success: function (oData) {
+                    if (oData.bResult) {
+                        h28_ShowMessage(oData.sMessage, sMessageWindow, nShowMessageLevel > 1, function () {
+                            if ($("#StoredReportsGrid").data("kendoGrid") != null)
+                            {
+                                $("#StoredReportsGrid").data("kendoGrid").dataSource.read();
+                            }
+                        }, @Booking.Library.Classes.Constants._nMaxWindowTimeout);
+                    }
+                    else {
+                        h28_ShowMessage(oData.sMessage, sMessageWindow, nShowMessageLevel > 0, function () {
+                        }, null);
+                    }
+                }
+            });
+        });
+    }
+     
+</script>
+
+@(Html.Kendo().ToolBar()
+.Name("AccountSaveAndActionsToolbar")
+.Events(E => E.Click("h28_ToolbarClick"))
+.Resizable(false)
+.Items(items =>
+{
+    if (string.Format("[{0}][{1}][{2}][{3}]", (int)Booking.Library.Classes.Enums.Reports.AdHocSLInvoice1, (int)Booking.Library.Classes.Enums.Reports.AdHocSLInvoice2, (int)Booking.Library.Classes.Enums.Reports.AdHocSLCreditNote1, (int)Booking.Library.Classes.Enums.Reports.AdHocSLCreditNote2).Contains("[" + this.Model._nReport.ToString() +"]"))
+    {
+        items.Add().Type(CommandType.Button).Text(Booking.Site.Classes.Helper.Text(this.Context, this._oIMemoryCache, this._oHeron28Context, this.User.Identity.Name, "Issue A New PDF Invoice", "Issue A New PDF Invoice", false)).Icon("plus").HtmlAttributes(new { onclick = "IssueInvoice('" + this.Model._gId.ToString() + "', " + this.Model._nReport.ToString() + ", '" + Booking.Site.Classes.Helper.Text(this.Context, this._oIMemoryCache, this._oHeron28Context, this.User.Identity.Name, "Would you like to issue the Invoice now", "Would you like to issue the Invoice now?", false) + "')" });
+    }
+    items.Add().Type(CommandType.Button).Text(Booking.Site.Classes.Helper.Text(this.Context, this._oIMemoryCache, this._oHeron28Context, this.User.Identity.Name, "Store Report", "Store Report", false)).Icon("save").Click("StoreReport");
+}))
+
+<div id="rvMain" class="k-widget">
+    @Booking.Site.Classes.Helper.Text(this.Context, this._oIMemoryCache, this._oHeron28Context, this.User.Identity.Name, "Data is loading, please wait...", "Data is loading, please wait...", false)
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#rvMain").telerik_ReportViewer({
+            reportServer: {
+                url: "@Booking.Data.Classes.Helper.GetCurrentReportServer()",
+                username: null,
+                password: null
+            },
+            reportSource: {
+                report: '@this.Model._sReport',
+                parameters: {
+                    @switch ((Booking.Library.Classes.Enums.Reports)this.Model._nReport)
+                    {
+                        case Booking.Library.Classes.Enums.Reports.AdHocSLInvoice1:
+                        case Booking.Library.Classes.Enums.Reports.AdHocSLInvoice2:
+                        case Booking.Library.Classes.Enums.Reports.AdHocSLCreditNote1:
+                        case Booking.Library.Classes.Enums.Reports.AdHocSLCreditNote2:
+                        case Booking.Library.Classes.Enums.Reports.AdHocPLInvoice1:
+                        case Booking.Library.Classes.Enums.Reports.AdHocPLInvoice2:
+                        case Booking.Library.Classes.Enums.Reports.AdHocPLCreditNote1:
+                        case Booking.Library.Classes.Enums.Reports.AdHocPLCreditNote2:
+                        {
+                            <text>
+                                nServerInstance: @Booking.Data.Classes.Configuration._nServerInstance,
+                                gTransactionId: '@this.Model._gId.ToString()',
+                                gCompanyId: gCompanyId,
+                                sCulture: sCompanyCulture
+                            </text>
+                        }
+                            break;
+                        case Booking.Library.Classes.Enums.Reports.AdHocDisbursementBatch:
+                        {
+                            <text>
+                                nServerInstance: @Booking.Data.Classes.Configuration._nServerInstance,
+                                gBatchId: '@this.Model._gId.ToString()',
+                                sCulture: sCompanyCulture
+                            </text>
+                        }
+                            break;
+                        case Booking.Library.Classes.Enums.Reports.DisbursementBatch:
+                        {
+                            <text>
+                                nServerInstance: @Booking.Data.Classes.Configuration._nServerInstance,
+                                gCompanyId: gCompanyId,
+                                dStart: kendo.parseDate('@this.Model._dStart.ToString("dd/MM/yyyy")', "dd/MM/yyyy"),
+                                dEnd: kendo.parseDate('@this.Model._dEnd.Date.AddDays(1).ToString("dd/MM/yyyy")', "dd/MM/yyyy"),
+                                bPosted: '@this.Model._bPosted.ToString().ToLower()',
+                                nReport: @this.Model._nReport,
+                                bAll: '@this.Model._bAll.ToString().ToLower()' == 'true',
+                                sCulture: sCompanyCulture
+                            </text>
+                        }
+                            break;
+                        case Booking.Library.Classes.Enums.Reports.AdHocJournalBatch:
+                        {
+                            <text>
+                                nServerInstance: @Booking.Data.Classes.Configuration._nServerInstance,
+                                gCompanyId: gCompanyId,
+                                gBatchId: '@this.Model._gId.ToString()',
+                                sCulture: sCompanyCulture
+                            </text>
+                        }
+                            break;
+                        case Booking.Library.Classes.Enums.Reports.AdHocBatchesInProgress:
+                        {
+                            <text>
+                                nServerInstance: @Booking.Data.Classes.Configuration._nServerInstance,
+                                gCompanyId: gCompanyId,
+                                gBatchId: '@this.Model._gId.ToString()',
+                                sCulture: sCompanyCulture
+                            </text>
+                        }
+                            break;
+                        case Booking.Library.Classes.Enums.Reports.TimeBatches:
+                        {
+                            <text>
+                                nServerInstance: @Booking.Data.Classes.Configuration._nServerInstance,
+                                gCompanyId: gCompanyId,
+                                sJob: '@this.Model._sHeading',
+                                dStart: kendo.parseDate('@this.Model._dStart.ToString("dd/MM/yyyy")', "dd/MM/yyyy"),
+                                dEnd: kendo.parseDate('@this.Model._dEnd.Date.AddDays(1).ToString("dd/MM/yyyy")', "dd/MM/yyyy"),
+                                bPosted: '@this.Model._bPosted.ToString().ToLower()',
+                                nReport: @this.Model._nReport,
+                                bAll: '@this.Model._bAll.ToString().ToLower()' == 'true',
+                                sCulture: sCompanyCulture
+                            </text>
+                        }
+                            break;
+                        case Booking.Library.Classes.Enums.Reports.TrialBalance1:
+                        case Booking.Library.Classes.Enums.Reports.TrialBalance2:
+                        {
+                            <text>
+                                nServerInstance: @Booking.Data.Classes.Configuration._nServerInstance,
+                                gInstanceId: '@this.Model._gInstanceId.ToString()',
+                                gCompanyId: gCompanyId,
+                                dAtDate: kendo.parseDate('@this.Model._dAt.Date.AddDays(1).ToString("dd/MM/yyyy")', "dd/MM/yyyy"),
+                                sExcludeBatches: '@this.Model._sExcludeBatches',
+                                sCulture: sCompanyCulture
+                            </text>
+                        }
+                            break;
+                        case Booking.Library.Classes.Enums.Reports.TransactionReport1:
+                        {
+                            <text>
+                                nServerInstance: @Booking.Data.Classes.Configuration._nServerInstance,
+                                gInstanceId: '@this.Model._gInstanceId.ToString()',
+                                gCompanyId: gCompanyId,
+                                dFromDate: h28_ExcelDateToJSDate(@this.Model._nStart),
+                                dToDate: h28_ExcelDateToJSDate(@this.Model._nEnd),
+                                bAll: '@this.Model._bAll.ToString().ToLower()' == 'true',
+                                bContras: '@this.Model._bContras.ToString().ToLower()' == 'true',
+                                sAccounts: '@this.Model._sAccounts',
+                                sExcludeBatches: '@this.Model._sExcludeBatches',
+                                sCulture: sCompanyCulture
+                            </text>
+                        }
+                            break;
+                        case Booking.Library.Classes.Enums.Reports.AgedDebtorsReport1:
+                        case Booking.Library.Classes.Enums.Reports.AgedDebtorsReport2:
+                        {
+                            <text>
+                                nServerInstance: @Booking.Data.Classes.Configuration._nServerInstance,
+                                gInstanceId: '@this.Model._gInstanceId.ToString()',
+                                gCompanyId: gCompanyId,
+                                dAtDate: kendo.parseDate('@this.Model._dAt.Date.AddDays(1).ToString("dd/MM/yyyy")', "dd/MM/yyyy"),
+                                bAll: '@this.Model._bAll.ToString().ToLower()' == 'true',
+                                sCustomers: '@this.Model._sCustomers',
+                                sExcludeBatches: '@this.Model._sExcludeBatches',
+                                sCulture: sCompanyCulture
+                            </text>
+                        }
+                            break;
+                    }
+                }
+            },
+            ready: function () {
+                $("[data-command*='telerik_ReportViewer_toggleParametersArea']").parent().hide();
+            },
+            parametersAreaVisible: false,
+            viewMode: telerikReportViewer.ViewModes.INTERACTIVE,
+            scaleMode: telerikReportViewer.ScaleModes.SPECIFIC,
+            scale: 1.0,
+            enableAccessibility: true,
+            parameterAreaVisible: false,
+            sendEmail: { enabled: true }
+        });
+    });
+
+    function IssueInvoice(gId, nReport, sMessage) {
+        h28_confirm(sMessage, function () {
+            var oModel =
+            {
+                _gId: gId,
+                _nReport: nReport
+            };
+            $.ajax({
+                url: '@Url.Content("~/Shared/_IssueInvoice")',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8;',
+                data: kendo.stringify(oModel),
+                success: function (oData) {
+                    if (oData.bResult) {
+                        h28_ShowMessage(oData.sMessage, sMessageWindow, nShowMessageLevel > 1, function () {
+                        }, @Booking.Library.Classes.Constants._nMaxWindowTimeout);
+                    }
+                    else {
+                        h28_ShowMessage(oData.sMessage, sMessageWindow, nShowMessageLevel > 0, function () {
+                        }, null);
+                    }
+                }
+            });
+        });
+    }
+</script>
+<style>
+    #rvMain {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 60px;
+        bottom: 5px;
+        overflow: hidden;
+        font-family: Verdana, Arial;
+    }
+</style>
